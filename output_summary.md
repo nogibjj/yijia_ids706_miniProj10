@@ -1,4 +1,6 @@
-## Loaded Dataset
+### Loaded Dataset
+
+Here is the result of loading the original data from 'rdu-weather-history.csv'.
 
 | Date | Temperature Minimum | Temperature Maximum | Precipitation | Snowfall | Snow Depth | Avgerage Wind Speed |
 |---|---|---|---|---|---|---|
@@ -154,7 +156,9 @@
 | 2022-05-28 | 61 | 82 | 0.62 | 0.0 | 0.0 | 2.5 |
 | 2022-05-29 | 59 | 88 | 0.0 | 0.0 | 0.0 | 2.7 |
 
-## Transformed Data
+### Transformed Data
+
+This is the transformed data where we calculated the average temperature by combining 'Temperature Minimum' and 'Temperature Maximum' for each row.
 
 | Date | Temperature Minimum | Temperature Maximum | Precipitation | Snowfall | Snow Depth | Avgerage Wind Speed | Avg_Temperature |
 |---|---|---|---|---|---|---|---|
@@ -310,7 +314,9 @@
 | 2022-05-28 | 61 | 82 | 0.62 | 0.0 | 0.0 | 2.5 | 71.5 |
 | 2022-05-29 | 59 | 88 | 0.0 | 0.0 | 0.0 | 2.7 | 73.5 |
 
-## Query Result
+### Query Result
+
+Based on the transformed data, this query calculates the average 'Temperature Minimum' for each date where 'Temperature Maximum' is above 75.
 
 | Date | avg_temp_min |
 |---|---|

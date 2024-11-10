@@ -21,7 +21,6 @@ def transform_data(df):
 
 # Function to execute a simple Spark SQL query on existing columns
 def query(df, spark):
-    # Create a view from the DataFrame for querying
     df.createOrReplaceTempView("weather_data")
     
     # Query to filter and group data
