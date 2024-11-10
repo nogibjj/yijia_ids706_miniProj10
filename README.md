@@ -16,7 +16,7 @@ This project use P
 - **`.github/workflows/`**: Contains CI/CD workflows for GitHub, which trigger actions like setup, linting, and testing when code is pushed to the repository.
 - **`rdu-weather-history.csv`**: Weather data for the Durham region.
 
-- **`output.md`**: A log of all SQL queries (INSERT, UPDATE, DELETE, and SELECT) performed during the CRUD operations.
+- **`output_summary.md`**: A log of all SQL queries (INSERT, UPDATE, DELETE, and SELECT) performed during the CRUD operations.
 
 ## Setup
 
