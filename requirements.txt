@@ -6,3 +6,10 @@ requests
 ruff
 pandas
 pytest-mock
+
+
+# databricks-sql-connector
+# databricks
+pyspark
+# requests
+# tabulate

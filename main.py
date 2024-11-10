@@ -1,61 +1,45 @@
-"""
-ETL-CRUD script
-"""
+from mylib.lib import create_spark, load_data, transform_data, query
 
-import os
-from mylib.extract import extract
-from mylib.transform_load import load
-from mylib.query import create_CRUD, read_CRUD, update_CRUD, delete_CRUD
+
+def write_to_markdown(file_path, title, dataframe):
+    """Append DataFrame content as a Markdown table in a file."""
+    with open(file_path, "a") as file:
+        file.write(f"## {title}\n\n")
+        # Convert DataFrame rows to Markdown format
+        file.write("| " + " | ".join(dataframe.columns) + " |\n")
+        file.write("|" + "|".join(["---"] * len(dataframe.columns)) + "|\n")
+
+        for row in dataframe.collect():
+            file.write("| " + " | ".join([str(item) for item in row]) + " |\n")
+
+        file.write("\n")
 
 
 def main():
-    # Define file paths and database name
-    dataset_url = "https://raw.githubusercontent.com/nogibjj/yijia_ids706_miniProj3/refs/heads/main/rdu-weather-history.csv"
-    csv_file_path = "data/rdu-weather-history.csv"
-    database_path = "WeatherDB.db"
+    # Initialize Spark Session
+    spark = create_spark("RDU Weather Analysis")
 
-    # Ensure the 'data' directory exists
-    if not os.path.exists("data"):
-        os.makedirs("data")
+    # Define the path to the output file
+    output_file = "output_summary.md"
 
-    # Step 1: Extract
-    print("Extracting data from the source URL...")
-    extract(url=dataset_url, file_path=csv_file_path)
+    # Path to the CSV file
+    file_path = "rdu-weather-history.csv"
 
-    # Step 2: Transform and Load
-    print(f"Transforming data and loading into {database_path}...")
-    load(dataset=csv_file_path)
+    # Load the dataset
+    df = load_data(spark, file_path)
+    write_to_markdown(output_file, "Loaded Dataset", df)
 
-    # Step 3: CRUD Operations
+    # Transform the data
+    transformed_df = transform_data(df)
+    write_to_markdown(output_file, "Transformed Data", transformed_df)
 
-    # Create
-    print("Creating a new record...")
-    create_CRUD(
-        database_path, ("2024-10-03", 59.0, 77.5, 0.0, 0.0, 0.0, 12.0)
-    )  # Example record for testing
+    # Run SQL query on transformed data
+    sql_result_df = query(transformed_df, spark)
+    write_to_markdown(output_file, "Query Result", sql_result_df)
 
-    # Read
-    print("Reading records from the database...")
-    read_results = read_CRUD(database_path, "2024-10-03")
-    print(f"Read results: {read_results}")
-
-    # Update
-    print("Updating a record in the database...")
-    update_CRUD(database_path, "2024-10-03", (62.5, 80.0, 0.1, 0.0, 0.0, 15.0))
-
-    # Read after update
-    print("Reading records after update...")
-    read_results_after_update = read_CRUD(database_path, "2024-10-03")
-    print(f"Read after update: {read_results_after_update}")
-
-    # Delete
-    print("Deleting the record...")
-    delete_CRUD(database_path, "2024-10-03")
-
-    # Read after delete
-    print("Reading records after deletion...")
-    read_results_after_delete = read_CRUD(database_path, "2024-10-03")
-    print(f"Read after delete: {read_results_after_delete}")
+    # Stop Spark Session
+    spark.stop()
+    print(f"Report saved as {output_file}")
 
 
 if __name__ == "__main__":
